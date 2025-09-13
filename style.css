@@ -20,20 +20,19 @@ h1 { text-align: center; color: var(--accent-color); margin-top: 0; }
 .video-layer {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
 }
-#video-bg { /* 背景レイヤー */
+#video-bg {
     transition: filter 0.3s ease;
 }
-#video-fg { /* 被写体レイヤー (中央だけ見える) */
+#video-fg {
     mask: radial-gradient(circle, white 40%, rgba(255,255,255,0.5) 60%, transparent 80%);
     -webkit-mask: radial-gradient(circle, white 40%, rgba(255,255,255,0.5) 60%, transparent 80%);
 }
-
 #exposure-overlay {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background-color: #000;
     opacity: 0;
     transition: opacity 0.3s ease;
-    pointer-events: none; /* 下のビデオを操作できるように */
+    pointer-events: none;
 }
 
 .controls { background: rgba(0,0,0,0.1); padding: 20px; border-radius: var(--border-radius); }

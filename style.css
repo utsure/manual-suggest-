@@ -19,36 +19,14 @@ h1 { text-align: center; color: var(--accent-color); margin-top: 0; }
 p { text-align: center; }
 
 #simulation-area {
-    width: 100%; padding-top: 75%; position: relative; border-radius: var(--border-radius);
-    overflow: hidden; background: #87CEEB; margin: 20px 0;
+    width: 100%; padding-top: 56.25%; /* 16:9 Aspect Ratio */
+    position: relative; border-radius: var(--border-radius);
+    overflow: hidden; background: #000; margin: 20px 0;
 }
-#background-layer {
+#subject-video {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    object-fit: cover;
     transition: filter 0.3s ease;
-}
-.bg-shape { position: absolute; }
-.bg-sky { width: 100%; height: 60%; background: #87CEEB; }
-.bg-mountain {
-    width: 100%; height: 20%; bottom: 25%;
-    background: #27ae60;
-    clip-path: polygon(0% 100%, 0% 60%, 25% 20%, 50% 50%, 75% 30%, 100% 70%, 100% 100%);
-}
-.bg-ground { width: 100%; height: 25%; background: #8c6d62; bottom: 0; }
-
-#subject-layer {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    display: flex; justify-content: center; align-items: center;
-}
-.subject-shape {
-    width: 25%; height: 50%;
-    background: var(--highlight-color);
-    border-radius: 50% 50% 0 0; /* 頭と体 */
-    position: relative;
-    top: 10%;
-}
-@keyframes motionBlur {
-    0% { transform: translateX(-10px); }
-    100% { transform: translateX(10px); }
 }
 
 .controls { background: rgba(0,0,0,0.1); padding: 20px; border-radius: var(--border-radius); }

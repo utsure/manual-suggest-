@@ -6,106 +6,49 @@
     --highlight-color: #3498db;
     --border-radius: 12px;
 }
-
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
-    background: var(--primary-bg);
-    color: var(--text-color);
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    min-height: 100vh;
+    margin: 0; padding: 20px; background: var(--primary-bg); color: var(--text-color);
+    display: flex; justify-content: center; align-items: flex-start; min-height: 100vh;
 }
-
 .container {
-    width: 100%;
-    max-width: 600px;
-    background: var(--secondary-bg);
-    padding: 20px 30px;
-    border-radius: var(--border-radius);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    box-sizing: border-box;
+    width: 100%; max-width: 600px; background: var(--secondary-bg); padding: 20px 30px;
+    border-radius: var(--border-radius); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); box-sizing: border-box;
 }
-
 h1 { text-align: center; color: var(--accent-color); margin-top: 0; }
 p { text-align: center; line-height: 1.6; color: #bdc3c7; }
 
-/* シミュレーション表示エリア */
 #simulation-area {
-    width: 100%;
-    padding-top: 75%; /* 4:3 Aspect Ratio */
-    position: relative;
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    background: #555;
-    margin: 20px 0;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+    width: 100%; padding-top: 75%; position: relative; border-radius: var(--border-radius);
+    overflow: hidden; background: #555; margin: 20px 0; box-shadow: 0 5px 15px rgba(0,0,0,0.4);
 }
-
 #background-layer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url('https://storage.googleapis.com/gemini-prod/images/background_scenery.jpg'); /* サンプルの背景画像 */
-    background-size: cover;
-    background-position: center;
-    transition: filter 0.3s ease; /* ボケ感を滑らかに変化させる */
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background-image: url('https://storage.googleapis.com/gemini-prod/images/background_scenery.jpg');
+    background-size: cover; background-position: center; transition: filter 0.3s ease;
 }
-
 #subject-layer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    display: flex; justify-content: center; align-items: center;
 }
-
 #subject-layer img {
-    width: 40%;
-    max-width: 150px;
-    height: auto;
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
-    transition: transform 0.1s ease; /* ブレアニメーションが切り替わる際の滑らかさ */
+    width: 40%; max-width: 150px; height: auto; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
 }
-
-/* 動きのブレを表現するキーフレームアニメーション */
-@keyframes motionBlurLight {
-    0% { transform: translateX(-5px); }
-    100% { transform: translateX(5px); }
+@keyframes motionBlur {
+    0% { transform: translateX(-10px); opacity: 0.8; }
+    100% { transform: translateX(10px); opacity: 0.8; }
 }
-@keyframes motionBlurMedium {
-    0% { transform: translateX(-15px) scale(0.98); }
-    100% { transform: translateX(15px) scale(0.98); }
-}
-@keyframes motionBlurHeavy {
-    0% { transform: translateX(-30px) scale(0.95); opacity: 0.8; }
-    100% { transform: translateX(30px) scale(0.95); opacity: 0.8; }
-}
-
 
 .question-group { margin-bottom: 25px; background: rgba(0,0,0,0.1); padding: 15px; border-radius: var(--border-radius); }
 .question-group h2 { margin: 0 0 15px 0; font-size: 18px; display: flex; align-items: center; }
 .emoji { margin-right: 10px; font-size: 24px; }
-
 .options { display: flex; flex-wrap: wrap; gap: 10px; }
 .options input[type="radio"] { display: none; }
-.options label { padding: 10px 15px; background: #4a627a; border-radius: 8px; cursor: pointer; transition: background-color 0.3s, transform 0.2s; user-select: none; }
-.options input[type="radio"]:checked + label { background: var(--highlight-color); color: white; font-weight: bold; box-shadow: 0 0 10px var(--highlight-color); }
-
-#suggest-button { width: 100%; padding: 15px; font-size: 18px; font-weight: bold; color: white; background: var(--accent-color); border: none; border-radius: var(--border-radius); cursor: pointer; transition: transform 0.2s; margin-top: 20px; }
-#suggest-button:hover { transform: scale(1.02); }
+.options label { padding: 10px 15px; background: #4a627a; border-radius: 8px; cursor: pointer; transition: background-color 0.3s; user-select: none; }
+.options input[type="radio"]:checked + label { background: var(--highlight-color); color: white; font-weight: bold; }
 
 #results { margin-top: 30px; background: rgba(0,0,0,0.1); padding: 20px; border-radius: var(--border-radius); border: 1px solid var(--accent-color); }
-#results.hidden { display: none; }
 .settings-display { display: flex; justify-content: space-around; text-align: center; margin: 20px 0; }
 .setting-item .label { display: block; font-size: 14px; color: #bdc3c7; }
 .setting-item .value { display: block; font-size: 24px; font-weight: bold; color: var(--accent-color); }
-#results h3 { text-align: center; margin-bottom: 10px; }
 #explanation { background: #4a627a; padding: 15px; border-radius: 8px; }

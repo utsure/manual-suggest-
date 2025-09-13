@@ -1,73 +1,44 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // ラジオボタンの要素を全て取得
-    const radioButtons = document.querySelectorAll('input[type="radio"]');
+    // 要素を取得
+    const fStopSlider = document.getElementById('f-stop-slider');
+    const shutterSpeedSlider = document.getElementById('shutter-speed-slider');
     
-    // シミュレーション用の要素
+    const fStopValueSpan = document.getElementById('f-stop-value');
+    const shutterSpeedValueSpan = document.getElementById('shutter-speed-value');
+    
     const backgroundLayer = document.getElementById('background-layer');
-    const subjectImg = document.querySelector('#subject-layer img');
+    const subjectShape = document.querySelector('.subject-shape');
     
-    // 結果表示用の要素
-    const fStopResult = document.getElementById('f-stop-result');
-    const shutterSpeedResult = document.getElementById('shutter-speed-result');
-    const isoResult = document.getElementById('iso-result');
-    const explanationP = document.getElementById('explanation');
+    const isoResultSpan = document.getElementById('iso-result');
 
-    // 設定とシミュレーションを更新するメイン関数
-    function updateAll() {
-        // 1. ユーザーの選択を取得
-        const lighting = document.querySelector('input[name="lighting"]:checked').value;
-        const motion = document.querySelector('input[name="motion"]:checked').value;
-        // subjectsはF値に影響するため、backgroundと一緒に評価
-        const subjects = document.querySelector('input[name="subjects"]:checked').value;
-        const background = document.querySelector('input[name="background"]:checked').value;
-        
-        // 2. ルールエンジンに基づいて設定を決定
-        let fStop, shutterSpeed, iso;
-        let fStopReason, shutterReason, isoReason;
+    function updateSimulation() {
+        const fStop = parseFloat(fStopSlider.value);
+        const shutterSpeed = parseInt(shutterSpeedSlider.value);
 
-        // --- F値の決定 ---
-        const isPortrait = (background === 'blurry' || subjects === 'one');
-        fStop = isPortrait ? 2.8 : 8.0;
-        fStopReason = isPortrait ? "背景をぼかすため、F値を低くしました (f/2.8)。" : "全体にピントを合わせるため、F値を高くしました (f/8)。";
+        fStopValueSpan.innerText = `f/${fStop.toFixed(1)}`;
+        shutterSpeedValueSpan.innerText = `1/${shutterSpeed}s`;
 
-        // --- シャッタースピードの決定 ---
-        const isMoving = (motion === 'moving');
-        shutterSpeed = isMoving ? 500 : 125;
-        shutterReason = isMoving ? "被写体の動きを止めるため、シャッタースピードを速くしました (1/500s)。" : "手ブレを防ぐ安全なシャッタースピードを選びました (1/125s)。";
-
-        // --- ISO感度の決定 ---
-        const lightingEv = { sunny: 15, cloudy: 12, bright_indoor: 8, dim_indoor: 4 };
-        const targetEv = lightingEv[lighting];
-        const currentEvAtIso100 = Math.log2((fStop * fStop) / (1 / shutterSpeed));
-        let requiredIso = 100 * Math.pow(2, targetEv - currentEvAtIso100);
-        const standardIsos = [100, 200, 400, 800, 1600, 3200, 6400, 12800];
-        iso = standardIsos.find(std => std >= requiredIso) || 12800;
-        isoReason = (iso <= 200) ? "十分な光があるため、最高画質のISO感度に設定しました。" : 
-                    (iso <= 1600) ? "明るさを確保するためにISO感度を調整しました。" : 
-                    "暗い環境のためISO感度を高くしました。画質が荒れる可能性があります。";
-        
-        // 3. 結果をHTML要素に表示
-        fStopResult.innerText = `f/${fStop}`;
-        shutterSpeedResult.innerText = `1/${shutterSpeed}s`;
-        isoResult.innerText = iso;
-        explanationP.innerHTML = `• ${fStopReason}<br>• ${shutterReason}<br>• ${isoReason}`;
-
-        // 4. シミュレーションを更新
-        const blurValue = (16 / fStop) * 1.5;
+        const blurValue = 16 / fStop;
         backgroundLayer.style.filter = `blur(${blurValue}px)`;
         
-        subjectImg.style.animation = 'none';
-        if (isMoving && shutterSpeed < 250) {
-            const blurDuration = 125 / shutterSpeed * 0.5;
-            subjectImg.style.animation = `motionBlur ${blurDuration}s ease-in-out infinite alternate`;
+        if (shutterSpeed < 60) {
+            const motionBlurDuration = 60 / shutterSpeed * 0.1;
+            subjectShape.style.animation = `motionBlur ${motionBlurDuration}s ease-in-out infinite alternate`;
+        } else {
+            subjectShape.style.animation = 'none';
         }
+
+        const targetEv = 12; // 曇り/日陰の明るさ(EV値)を固定で想定
+        const currentEv = Math.log2((fStop * fStop) / (1 / shutterSpeed));
+        let requiredIso = 100 * Math.pow(2, targetEv - currentEv);
+
+        const standardIsos = [100, 200, 400, 800, 1600, 3200, 6400];
+        const iso = standardIsos.find(std => std >= requiredIso) || 6400;
+        isoResultSpan.innerText = iso;
     }
 
-    // いずれかのラジオボタンが変更されたら、全ての情報を更新
-    radioButtons.forEach(radio => {
-        radio.addEventListener('change', updateAll);
-    });
+    fStopSlider.addEventListener('input', updateSimulation);
+    shutterSpeedSlider.addEventListener('input', updateSimulation);
 
-    // 初回ロード時に一度実行して、初期状態を表示
-    updateAll();
+    updateSimulation();
 });

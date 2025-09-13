@@ -3,66 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>カメラ設定 提案＆シミュレーター</title>
+    <title>カメラ設定シミュレーター</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div class="container">
-        <h1>カメラ設定 提案＆シミュレーター</h1>
-        <p>質問に答えると、あなたに最適な設定と、その結果のイメージを提案します。</p>
-
+        <h1>カメラ設定シミュレーター</h1>
+        
         <div id="simulation-area">
             <div id="background-layer"></div>
             <div id="subject-layer">
-                <img src="https://storage.googleapis.com/gemini-prod/images/person_icon.png" alt="被写体">
+                <img src="https://i.imgur.com/6b22h0g.png" alt="被写体">
             </div>
         </div>
 
-        <div class="question-group">
-            <h2><span class="emoji">💡</span> どんな明るさで撮りますか？</h2>
-            <div class="options">
-                <input type="radio" id="light-sunny" name="lighting" value="sunny" checked><label for="light-sunny">☀️ 晴れた屋外</label>
-                <input type="radio" id="light-cloudy" name="lighting" value="cloudy"><label for="light-cloudy">☁️ 曇り・日陰</label>
-                <input type="radio" id="light-bright" name="lighting" value="bright_indoor"><label for="light-bright">🏠 明るい室内</label>
-                <input type="radio" id="light-dim" name="lighting" value="dim_indoor"><label for="light-dim">🌃 暗い室内・夜</label>
+        <div class="controls">
+            <div class="slider-group">
+                <label for="f-stop-slider">F値 (絞り): <span id="f-stop-value">f/2.8</span></label>
+                <input type="range" id="f-stop-slider" min="1.4" max="16" step="0.1" value="2.8">
+                <div class="slider-labels"><span>ぼける</span><span>くっきり</span></div>
             </div>
-        </div>
-
-        <div class="question-group">
-            <h2><span class="emoji">🏃‍♂️</span> 被写体は動いていますか？</h2>
-            <div class="options">
-                <input type="radio" id="motion-still" name="motion" value="still" checked><label for="motion-still">🧘‍♀️ 止まっている</label>
-                <input type="radio" id="motion-moving" name="motion" value="moving"><label for="motion-moving">🏃‍♂️ 動いている</label>
-            </div>
-        </div>
-
-        <div class="question-group">
-            <h2><span class="emoji">🏞️</span> 背景をどうしますか？</h2>
-            <div class="options">
-                <input type="radio" id="bg-blurry" name="background" value="blurry" checked><label for="bg-blurry">👤 ふんわりぼかす</label>
-                <input type="radio" id="bg-clear" name="background" value="clear"><label for="bg-clear">🏞️ くっきり見せる</label>
+            
+            <div class="slider-group">
+                <label for="shutter-speed-slider">シャッタースピード: <span id="shutter-speed-value">1/250s</span></label>
+                <input type="range" id="shutter-speed-slider" min="1" max="1000" step="1" value="250">
+                 <div class="slider-labels"><span>ブレる</span><span>止まる</span></div>
             </div>
         </div>
 
         <div id="results">
-            <h2>推奨設定</h2>
+            <h2>💡 ISO感度 自動予測</h2>
+            <p>現在の明るさ(曇り/日陰を想定)とあなたの設定から、最適なISO感度を予測します。</p>
             <div class="settings-display">
                 <div class="setting-item">
-                    <span class="label">F値 (絞り)</span>
-                    <span id="f-stop-result" class="value"></span>
-                </div>
-                <div class="setting-item">
-                    <span class="label">シャッタースピード</span>
-                    <span id="shutter-speed-result" class="value"></span>
-                </div>
-                <div class="setting-item">
-                    <span class="label">ISO感度</span>
-                    <span id="iso-result" class="value"></span>
+                    <span class="label">予測ISO感度</span>
+                    <span id="iso-result" class="value">400</span>
                 </div>
             </div>
-            <h3>💡 AIによる解説</h3>
-            <p id="explanation"></p>
         </div>
     </div>
 
